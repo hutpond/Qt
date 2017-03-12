@@ -1,6 +1,6 @@
 # ignore files
 
-Debug/
+/Debug/*
 GeneratedFiles/
 Resources/
 Win32/
