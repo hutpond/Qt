@@ -1,6 +1,7 @@
 # ignore files
 
 /Debug/*
+/Debug/MiGuan.tlog/
 GeneratedFiles/
 Resources/
 Win32/
@@ -8,3 +9,4 @@ MiGuan.sdf
 MiGuan.sln
 MiGuan.vcxproj.user
 MiGuan.v12.suo
+MiGuan.opensdf
