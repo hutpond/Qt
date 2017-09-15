@@ -25,6 +25,10 @@ void MainWindow::showEvent(QShowEvent *e)
     QMainWindow::showEvent(e);
 }
 
+/*
+ * 加载文件夹
+ * 内容显示在TreeView中
+ */
 void MainWindow::onBtnLoad()
 {
     QFileSystemModel *model = dynamic_cast<QFileSystemModel*>
@@ -39,11 +43,16 @@ void MainWindow::onBtnLoad()
     ui->treeView->setRootIndex(model->index(model->rootPath()));
 }
 
+/*
+ * 遍历QTreeView中的文件
+ * 显示在QTextEdit中
+ */
 void MainWindow::onBtnShow()
 {
     QFileSystemModel *model = dynamic_cast<QFileSystemModel*>
             (ui->treeView->model());
     if (model == NULL)    return;
+    ui->textEdit->clear();
 
     QString strRootPath = model->rootPath();
     QModelIndex index = model->index(strRootPath);
@@ -58,6 +67,10 @@ void MainWindow::onBtnShow()
     }
 }
 
+/*
+ * 递归函数，通过view, model, index递归遍历model节点
+ *
+ */
 void MainWindow::getChildrenIndex(QTreeView * view, QFileSystemModel * model,
                       QModelIndex * index, QStringList * list)
 {
@@ -65,7 +78,6 @@ void MainWindow::getChildrenIndex(QTreeView * view, QFileSystemModel * model,
 
     view->expand(*index);
     int nRow = model->rowCount(*index);
-    list->append(QString::number(nRow));
     for (int i = 0; i < nRow; ++i)
     {
         QModelIndex indexTmp = index->child(i, 0);
