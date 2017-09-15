@@ -7,6 +7,9 @@ namespace Ui {
 class MainWindow;
 }
 
+class QTreeView;
+class QFileSystemModel;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -18,8 +21,12 @@ public:
 protected:
     void showEvent(QShowEvent *);
 
+    void getChildrenIndex(QTreeView *, QFileSystemModel *, QModelIndex *,
+                          QStringList *);
+
 protected slots:
-    void onBtnClicked();
+    void onBtnLoad();
+    void onBtnShow();
 
 private:
     Ui::MainWindow *ui;

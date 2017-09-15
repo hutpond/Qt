@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileSystemModel>
-#include <QMetaObject>
-#include <QStandardItem>
+#include <QFileDialog>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,16 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QFileSystemModel *model = new QFileSystemModel;
     ui->treeView->setModel(model);
-
-    model->setRootPath(QDir::currentPath());
-    ui->treeView->setRootIndex(model->index(model->rootPath()));
-    QModelIndex index = model->index(model->rootPath());
-    ui->treeView->setCurrentIndex(index);
-    qWarning() << model->fileName(index) <<
-                  model->rootPath();
-
-    qWarning() << model->rowCount(index) <<
-                  model->columnCount(index);
+    //ui->treeView->expandAll(); ?无效
 }
 
 MainWindow::~MainWindow()
@@ -35,28 +25,51 @@ void MainWindow::showEvent(QShowEvent *e)
     QMainWindow::showEvent(e);
 }
 
-void MainWindow::onBtnClicked()
+void MainWindow::onBtnLoad()
 {
-    QAbstractItemModel * model = ui->treeView->model();
-    QModelIndex index = ui->treeView->currentIndex();
+    QFileSystemModel *model = dynamic_cast<QFileSystemModel*>
+            (ui->treeView->model());
+    if (model == NULL)    return;
 
-//    while (index.parent().isValid())
-//    {
-//        qWarning() << index.data().toString() <<
-//                      model->rowCount(index) <<
-//                      model->columnCount(index);
-//        index = index.parent();
-//    }
+    QString strPath = QFileDialog::getExistingDirectory(
+                this, tr("Open Directory"), "C:/",
+                QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+                );
+    model->setRootPath(strPath);
+    ui->treeView->setRootIndex(model->index(model->rootPath()));
+}
 
-    index = model->index(0,0);
-    qWarning() << index.data().toString() <<
-                  model->rowCount(index) <<
-                  model->columnCount(index);
-    while (index.child(0,0).isValid())
+void MainWindow::onBtnShow()
+{
+    QFileSystemModel *model = dynamic_cast<QFileSystemModel*>
+            (ui->treeView->model());
+    if (model == NULL)    return;
+
+    QString strRootPath = model->rootPath();
+    QModelIndex index = model->index(strRootPath);
+
+    QStringList list;
+    getChildrenIndex(ui->treeView, model, &index, &list);
+
+    int nCount = list.count();
+    for (int i = 0; i < nCount; ++i)
     {
-        index = index.child(0,0);
-        qWarning() << index.data().toString() <<
-                      model->rowCount(index) <<
-                      model->columnCount(index);
+        ui->textEdit->append(list.at(i));
     }
+}
+
+void MainWindow::getChildrenIndex(QTreeView * view, QFileSystemModel * model,
+                      QModelIndex * index, QStringList * list)
+{
+    list->append(model->filePath(*index));
+
+    view->expand(*index);
+    int nRow = model->rowCount(*index);
+    list->append(QString::number(nRow));
+    for (int i = 0; i < nRow; ++i)
+    {
+        QModelIndex indexTmp = index->child(i, 0);
+        getChildrenIndex(view, model, &indexTmp, list);
+    }
+    view->collapse(*index);
 }
