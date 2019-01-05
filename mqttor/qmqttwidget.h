@@ -18,18 +18,31 @@ public:
 
     void setSubscribe(const QString &);
 
+protected:
+    virtual void timerEvent(QTimerEvent *) override;
+
 private slots:
     void on_pushButton_connect_clicked();
     void on_pushButton_disconnect_clicked();
     void on_pushButton_Subscribe_clicked();
     void on_pushButton_Send_clicked();
 
+    void on_pushButton_connect_3_clicked();
+
+    void on_pushButton_connect_2_clicked();
+
 private:
     Ui::QMqttWidget *ui;
 
-    MQTTClient client;
-public:
-    static QMqttWidget *ms_instance;
+    QStringList m_strlistHost;
+    QStringList m_strlistPort;
+    int m_nHostIndex;
+    int m_nPortIndex;
+
+    MQTTClient subscribe;
+    MQTTClient publisher;
+    QString m_strMessage;
+    int m_nTimerId;
 };
 
 #endif // QMQTTWIDGET_H
