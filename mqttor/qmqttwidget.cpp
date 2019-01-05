@@ -155,7 +155,7 @@ void QMqttWidget::timerEvent(QTimerEvent *)
     if (m_strMessage != s_strMessage)
     {
         m_strMessage = s_strMessage;
-        ui->textBrowser->setText(m_strMessage);
+        ui->textEdit_2->setText(m_strMessage);
     }
 }
 
