@@ -26,7 +26,7 @@ void QMainWidget::paintEvent(QPaintEvent *)
   pen.setColor(Qt::black);
   pen.setBrush(Qt::black);
   pen.setStyle(Qt::SolidLine);
-  pen.setWidth(2);
+  pen.setWidth(1);
   painter.setPen(pen);
   switch (index) {
     case start:
@@ -53,6 +53,18 @@ void QMainWidget::paintEvent(QPaintEvent *)
         QPainterPath path(m_ptf[start]);
         path.cubicTo(m_ptf[control1] ,m_ptf[control2] ,m_ptf[end] );
         painter.drawPath(path);
+
+        pen.setColor(Qt::red);
+        pen.setWidth(3);
+        painter.setPen(pen);
+        const int SIZE = 20;
+        double length = path.length();
+        double per_len = length / (SIZE - 1);
+        for (int i = 0; i < SIZE; ++i) {
+          double percent = path.percentAtLength(i * per_len);
+          QPointF ptf = path.pointAtPercent(percent);
+          painter.drawPoint(ptf);
+        }
       }
       break;
     default:
