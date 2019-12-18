@@ -3,33 +3,23 @@
 
 #include <QWidget>
 
+class QDrawWidget;
+class QFittingWidget;
+
 class QMainWidget : public QWidget
 {
   Q_OBJECT
-
-  enum
-  {
-    start,
-    end,
-    control1,
-    control2,
-    number
-  };
 
 public:
   QMainWidget(QWidget *parent = 0);
   ~QMainWidget();
 
 protected:
-  void paintEvent(QPaintEvent *);
-  void mousePressEvent(QMouseEvent *);
-  void mouseReleaseEvent(QMouseEvent *);
-  void mouseMoveEvent(QMouseEvent *);
+  void resizeEvent(QResizeEvent *);
 
 private:
-  QPointF m_ptf[number];
-  int m_nNumber;
-  int m_nSelect;
+  QDrawWidget *m_pWdgDraw;
+  QFittingWidget *m_pWdgFitting;
 };
 
 #endif // QMAINWIDGET_H

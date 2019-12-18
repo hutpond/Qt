@@ -1,9 +1,13 @@
 # Qt
 =================
 
-Qt Project ½éÉÜ
+Qt Project ä»‹ç»
 
-* Matrix4x4: ÈıÎ¬¿Õ¼ä±ä»»
-* MiGuan: Ä£ÄâµÏË¹ÄáÃÛ¹ŞÓÎÏ·µÄÔË¶¯¹ì¼£
-* QTreeViewTest: QTreeViewÊ¹ÓÃÀı×Ó
-* OpenExe: ½«ÆäËü½ø³Ì´°¿ÚÇ¶ÈëÖ÷³ÌĞòÖĞ
+* Matrix4x4: ä¸‰ç»´ç©ºé—´å˜æ¢
+* MiGuan: æ¨¡æ‹Ÿè¿ªæ–¯å°¼èœœç½æ¸¸æˆçš„è¿åŠ¨è½¨è¿¹
+* QTreeViewTest: QTreeViewä½¿ç”¨ä¾‹å­
+* OpenExe: å°†å…¶å®ƒè¿›ç¨‹çª—å£åµŒå…¥ä¸»ç¨‹åºä¸­
+* DrawBezier: ç”»Bezieræ›²çº¿
+* FrenetBezier: Frenetåæ ‡ç³»å’ŒCartesianåæ ‡ç³»ä¸‹ï¼ŒBezieræ›²çº¿è½¬æ¢
+* mqttor: mqttå®¢æˆ·ç«¯å·¥å…·
+* ComAssistant: ä¸²å£åŠ©æ‰‹ï¼Œæœªå®Œæˆ

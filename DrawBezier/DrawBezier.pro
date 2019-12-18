@@ -26,10 +26,16 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        qmainwidget.cpp
+        qdrawwidget.cpp \
+        qfittingwidget.cpp \
+        qmainwidget.cpp \
+        QBezierCurve.cpp
 
 HEADERS += \
-        qmainwidget.h
+        qdrawwidget.h \
+        qfittingwidget.h \
+        qmainwidget.h \
+        QBezierCurve.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
