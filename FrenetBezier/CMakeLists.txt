@@ -37,6 +37,16 @@ else()
     main.cpp
     qstudiowindow.cpp
     qstudiowindow.h
+    qbaseshowwidget.cpp
+    qbaseshowwidget.h
+    qfrenetwidget.cpp
+    qfrenetwidget.h
+    qvehiclewidget.cpp
+    qvehiclewidget.h
+    qcenterwidget.cpp
+    qcenterwidget.h
+    qenuwidget.cpp
+    qenuwidget.h
   )
 endif()
 
