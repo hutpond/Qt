@@ -14,6 +14,13 @@ QCenterWidget::QCenterWidget(QWidget *parent) : QWidget(parent)
 
   connect(m_pWdgEnu, SIGNAL(selectPoints(QList<QSharedPointer<MapPoint> >)),
           m_pWdgVehicle, SLOT(setReferencePoints(QList<QSharedPointer<MapPoint> >)));
+  connect(m_pWdgEnu, SIGNAL(selectPoints(QList<QSharedPointer<MapPoint> >)),
+          m_pWdgFrenet, SLOT(setReferencePoints(QList<QSharedPointer<MapPoint> >)));
+
+  connect(m_pWdgVehicle, SIGNAL(clickedPoints(QList<QSharedPointer<QPointF> >)),
+          m_pWdgFrenet, SLOT(onClickedPoints(QList<QSharedPointer<QPointF> >)));
+  connect(m_pWdgVehicle, SIGNAL(bezierPoints(QList<QSharedPointer<QPointF> >)),
+          m_pWdgFrenet, SLOT(onBezierPoints(QList<QSharedPointer<QPointF> >)));
 }
 
 void QCenterWidget::resizeEvent(QResizeEvent *)

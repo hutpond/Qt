@@ -11,16 +11,23 @@ class QFrenetWidget : public QBaseShowWidget
 public:
   explicit QFrenetWidget(QWidget *parent = nullptr);
 
-  void setReferencePoints(const QList<QSharedPointer<MapPoint>> &);
-
 protected:
   virtual void drawImage() final;
   virtual void calcMapRect() final;
 
+  void drawBezier(QPainter &);
+
 signals:
+
+protected slots:
+  void setReferencePoints(const QList<QSharedPointer<MapPoint>> &);
+  void onClickedPoints(const QList<QSharedPointer<QPointF>> &);
+  void onBezierPoints(const QList<QSharedPointer<QPointF>> &);
 
 private:
   QList<QSharedPointer<QPointF>> m_listReference;
+  QList<QSharedPointer<QPointF>> m_ptfClicked;
+  QList<QSharedPointer<QPointF>> m_ptfBezier;
 };
 
 #endif // QFRENETWIDGET_H

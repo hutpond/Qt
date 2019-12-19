@@ -33,6 +33,56 @@ void QFrenetWidget::drawImage()
   painter.fillRect(m_image.rect(), QColor(230, 230, 230));
   this->drawMapBorder(painter);
   this->drawAxis(painter);
+
+  this->drawBezier(painter);
+}
+
+void QFrenetWidget::drawBezier(QPainter &painter)
+{
+  painter.save();
+
+  QPen pen;
+  pen.setWidth(2);
+
+  const int size_points = m_ptfClicked.size();
+  for (int i = 0; i < size_points; ++i) {
+    if (i < 2) {
+      pen.setColor(Qt::darkMagenta);
+    }
+    else if (i < 4) {
+      pen.setColor(Qt::darkGreen);
+    }
+    else {
+      pen.setColor(Qt::black);
+    }
+    painter.setPen(pen);
+
+    QPointF ptf = m_transform.map(*m_ptfClicked[i]);
+    painter.drawEllipse(ptf, 4, 4);
+  }
+
+  if (size_points >= 4) {
+    QPainterPath path;
+    path.moveTo(*m_ptfClicked[0]);
+    path.cubicTo(*m_ptfClicked[2], *m_ptfClicked[3], *m_ptfClicked[1]);
+    path = m_transform.map(path);
+
+    pen.setWidth(2);
+    pen.setColor(Qt::black);
+    painter.setPen(pen);
+    painter.drawPath(path);
+
+    QPolygonF pgf;
+    for (const auto &point : m_ptfBezier) {
+      pgf << *point;
+    }
+    pgf = m_transform.map(pgf);
+    pen.setColor(Qt::red);
+    painter.setPen(pen);
+    painter.drawPolyline(pgf);
+  }
+
+  painter.restore();
 }
 
 void QFrenetWidget::calcMapRect()
@@ -71,4 +121,16 @@ void QFrenetWidget::calcMapRect()
                     m_rectPicture.width() / m_rectfMap.height());
   m_transform.translate(-(m_rectfMap.x() + m_rectfMap.width()),
                         -(m_rectfMap.y() + m_rectfMap.height()));
+}
+
+void QFrenetWidget::onClickedPoints(const QList<QSharedPointer<QPointF>> &points)
+{
+  m_ptfClicked = points;
+  this->doUpdate(true);
+}
+
+void QFrenetWidget::onBezierPoints(const QList<QSharedPointer<QPointF>> &points)
+{
+  m_ptfBezier = points;
+  this->doUpdate(true);
 }
