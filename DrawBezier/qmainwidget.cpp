@@ -8,8 +8,8 @@ QMainWidget::QMainWidget(QWidget *parent)
   this->setMouseTracking(true);
   m_pWdgDraw = new QDrawWidget(this);
   m_pWdgFitting = new QFittingWidget(this);
-  //m_pWdgDraw->hide();
-  m_pWdgFitting->hide();
+  m_pWdgDraw->hide();
+  //m_pWdgFitting->hide();
 }
 
 QMainWidget::~QMainWidget()

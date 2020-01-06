@@ -1,5 +1,6 @@
-#include <QLineF>
 #include "QBezierCurve.h"
+
+#include <QLineF>
 
 QBezierCurve::QBezierCurve()
 {
@@ -28,7 +29,7 @@ void QBezierCurve::calcBezier()
   if (size_point < 2) {
     return;
   }
-  const float factor = 0.25;
+  const float factor = 0.13;
   for (int i = 0; i < size_point - 1; ++i) {
     QBezier bezier;
     bezier.start = points_[i];

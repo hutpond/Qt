@@ -4,6 +4,8 @@
 #include "qbaseshowwidget.h"
 
 struct MapPoint;
+class QCubicSplines;
+class QBezierCurve;
 
 class QVehicleWidget : public QBaseShowWidget
 {
@@ -34,6 +36,9 @@ private:
   QList<QSharedPointer<QPointF>> m_listReference;
   QList<QSharedPointer<QPointF>> m_ptfClicked;
   QList<QSharedPointer<QPointF>> m_ptfBezier;
+
+  QSharedPointer<QCubicSplines> m_pCubicSplines;
+  QSharedPointer<QBezierCurve> m_pBezierCurve;
 };
 
 #endif // QVEHICLEWIDGET_H

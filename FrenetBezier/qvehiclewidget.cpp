@@ -3,11 +3,16 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include "qcenterwidget.h"
+#include "qcubicsplines.h"
+#include "QBezierCurve.h"
 
 QVehicleWidget::QVehicleWidget(QWidget *parent)
   : QBaseShowWidget(VehicleCoord, parent)
 {
   m_fDisplayRatio = 1.2;
+
+  m_pCubicSplines.reset(new QCubicSplines());
+  m_pBezierCurve.reset(new QBezierCurve);
 }
 
 void QVehicleWidget::setReferencePoints(const QList<QSharedPointer<MapPoint>> &points)
@@ -26,6 +31,8 @@ void QVehicleWidget::setReferencePoints(const QList<QSharedPointer<MapPoint>> &p
   transform.rotate(180 + angle);
   transform.translate(-points[0]->east, -points[0]->north);
 
+  m_pCubicSplines->reset();
+  m_pBezierCurve->clear();
   for (int i = 0; i < size_points; ++i) {
     QSharedPointer<QPointF> ptf(new QPointF);
     ptf->setX(points[i]->east);
@@ -33,8 +40,12 @@ void QVehicleWidget::setReferencePoints(const QList<QSharedPointer<MapPoint>> &p
     *ptf = transform.map(*ptf);
 
     m_listReference.push_back(ptf);
+    m_pCubicSplines->addPoint(ptf->x(), ptf->y());
+    m_pBezierCurve->addPoint(*ptf);
   }
 
+  m_pCubicSplines->calculate();
+  m_pBezierCurve->calcBezier();
   this->calcMapRect();
   this->doUpdate(true);
 }
@@ -60,11 +71,41 @@ void QVehicleWidget::drawReference(QPainter &painter)
   painter.setPen(pen);
 
   QPolygonF pgf;
-  for (const auto &point : m_listReference) {
-    pgf << QPointF(point->x(), point->y());
+  const int size_points = m_listReference.size();
+  for (int i = 0; i < size_points - 1; ++i) {
+    Eigen::Vector4d coef = m_pCubicSplines->getCoefficient(i);
+
+    const int number = 10;
+    double step = (m_listReference[i + 1]->x() - m_listReference[i]->x()) / number;
+    for (int j = 0; j < number; ++j) {
+      double x = m_listReference[i]->x() + j * step;
+      double y = coef[0] * std::pow(x, 3) + coef[1] * std::pow(x, 2) +
+          coef[2] * x + coef[3];
+      pgf << QPointF(x, y);
+    }
   }
   pgf = m_transform.map(pgf);
   painter.drawPolyline(pgf);
+
+  pen.setColor(Qt::red);
+  painter.setPen(pen);
+  auto beziers = m_pBezierCurve->getBezier();
+  for (const auto &bezier : beziers) {
+    QPainterPath path;
+    path.moveTo(bezier.start);
+    path.cubicTo(bezier.control, bezier.control2, bezier.end);
+    path = m_transform.map(path);
+    painter.drawPath(path);
+  }
+
+  pen.setColor(Qt::black);
+  painter.setPen(pen);
+  for (const auto &point : m_listReference) {
+    QPointF ptf(*point);
+    ptf = m_transform.map(ptf);
+    painter.drawEllipse(ptf, 4, 4);
+  }
+
   painter.restore();
 }
 

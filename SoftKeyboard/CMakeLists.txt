@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(FrenetBezier LANGUAGES CXX)
+project(SoftKeyboard LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -26,33 +26,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-include_directories(/usr/include/eigen3)
-
 if(ANDROID)
-  add_library(FrenetBezier SHARED
+  add_library(SoftKeyboard SHARED
     main.cpp
-    qstudiowindow.cpp
-    qstudiowindow.h
+    QHmiSoftKeyboard.cpp
+    QHmiSoftKeyboard.h
+    QAlphabetKeyboard.cpp
+    QAlphabetKeyboard.h
+    QNumberKeyboard.cpp
+    QNumberKeyboard.h
+    QHmiKeyboardButton.cpp
+    QHmiKeyboardButton.h
   )
 else()
-  add_executable(FrenetBezier
+  add_executable(SoftKeyboard
     main.cpp
-    qstudiowindow.cpp
-    qstudiowindow.h
-    qbaseshowwidget.cpp
-    qbaseshowwidget.h
-    qfrenetwidget.cpp
-    qfrenetwidget.h
-    qvehiclewidget.cpp
-    qvehiclewidget.h
-    qcenterwidget.cpp
-    qcenterwidget.h
-    qenuwidget.cpp
-    qenuwidget.h
-    qcubicsplines.h
-    QBezierCurve.cpp
-    QBezierCurve.h
+    QHmiSoftKeyboard.cpp
+    QHmiSoftKeyboard.h
+    QAlphabetKeyboard.cpp
+    QAlphabetKeyboard.h
+    QNumberKeyboard.cpp
+    QNumberKeyboard.h
+    QHmiKeyboardButton.cpp
+    QHmiKeyboardButton.h
   )
 endif()
 
-target_link_libraries(FrenetBezier PRIVATE Qt5::Widgets)
+target_link_libraries(SoftKeyboard PRIVATE Qt5::Widgets)

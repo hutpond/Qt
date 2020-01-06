@@ -25,7 +25,7 @@ void QFittingWidget::paintEvent(QPaintEvent *)
     bezier_curve.addPoint(pt);
   }
 
-  if (m_ptfs.size() == 7) {
+  if (m_ptfs.size() == 5) {
     bezier_curve.calcBezier();
     const auto &beziers = bezier_curve.getBezier();
 
@@ -51,7 +51,7 @@ void QFittingWidget::mousePressEvent(QMouseEvent *e)
     m_ptfs.clear();
   }
   else if (Qt::LeftButton == e->button()) {
-    if (m_ptfs.size() < 7) {
+    if (m_ptfs.size() < 5) {
       QPointF ptf = e->pos();
       m_ptfs.push_back(ptf);
     }
