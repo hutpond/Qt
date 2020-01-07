@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
   rect.moveCenter(pt);
   w.setGeometry(rect);
 
-  QHmiSoftKeyboard keyboard(&w);
-  keyboard.setGeometry(0, 0, 683, 220);
+  QHmiSoftKeyboard keyboard(QHmiSoftKeyboard::Alphabet, &w);
+  keyboard.setGeometry(0, 0, 683, 270);
 
   QTextEdit textEdit(&w);
-  textEdit.setGeometry(0, 250, 800, 200);
+  textEdit.setGeometry(0, 300, 800, 200);
 
   w.show();
   return a.exec();

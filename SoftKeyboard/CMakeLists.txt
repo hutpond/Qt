@@ -31,6 +31,8 @@ if(ANDROID)
     main.cpp
     QHmiSoftKeyboard.cpp
     QHmiSoftKeyboard.h
+    QBaseKeyboard.cpp
+    QBaseKeyboard.h
     QAlphabetKeyboard.cpp
     QAlphabetKeyboard.h
     QNumberKeyboard.cpp
@@ -43,6 +45,8 @@ else()
     main.cpp
     QHmiSoftKeyboard.cpp
     QHmiSoftKeyboard.h
+    QBaseKeyboard.cpp
+    QBaseKeyboard.h
     QAlphabetKeyboard.cpp
     QAlphabetKeyboard.h
     QNumberKeyboard.cpp

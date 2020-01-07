@@ -9,7 +9,8 @@ class QHmiKeyboardButton : public QPushButton
 {
   Q_OBJECT
 public:
-  explicit QHmiKeyboardButton(QWidget *, int, const QString &, const QString &);
+  explicit QHmiKeyboardButton(QWidget *);
+  void setButtonValue(int, const QString &, const QString &);
 
 protected slots:
   void onPressed();

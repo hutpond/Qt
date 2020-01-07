@@ -3,16 +3,20 @@
 #include <QApplication>
 #include <QKeyEvent>
 
-QHmiKeyboardButton::QHmiKeyboardButton(QWidget *parent, int value, const QString &text, const QString &name)
+QHmiKeyboardButton::QHmiKeyboardButton(QWidget *parent)
   : QPushButton(parent)
-  , m_keyValue(value)
-  , m_strText(text)
 {
-  this->setText(name);
   this->setFocusPolicy(Qt::NoFocus);
 
   connect(this, SIGNAL(pressed()), this, SLOT(onPressed()));
   connect(this, SIGNAL(released()), this, SLOT(onReleased()));
+}
+
+void QHmiKeyboardButton::setButtonValue(int value, const QString &text, const QString &name)
+{
+  m_keyValue = value;
+  m_strText = text;
+  this->setText(name);
 }
 
 void QHmiKeyboardButton::onPressed()
