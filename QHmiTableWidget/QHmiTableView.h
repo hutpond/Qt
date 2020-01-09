@@ -12,6 +12,7 @@ public:
   explicit QHmiTableView(QWidget *parent = nullptr);
   void setHeaderVisible(bool, bool);
   void setModel(QHmiTableModel *);
+  void setDataPrecision(int, int);
 
 protected:
   virtual void resizeEvent(QResizeEvent *) final;
@@ -27,6 +28,12 @@ private:
   QVector<QRectF> m_vctHHeaderRects;
   QVector<QRectF> m_vctVHeaderRects;
   QVector<QVector<QRectF>> m_vctCellRects;
+
+  QFont m_fontData;
+  QFont m_fontHeader;
+
+  int m_nIntegerDigital;
+  int m_nDecimalDigital;
 };
 
 #endif // QHMITABLEVIEW_H

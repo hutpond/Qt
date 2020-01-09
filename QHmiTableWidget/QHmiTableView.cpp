@@ -9,7 +9,8 @@ QHmiTableView::QHmiTableView(QWidget *parent)
   , m_pObjModel(Q_NULLPTR)
   , m_bHHeaderVisible(true)
   , m_bVHeaderVisible(true)
-
+  , m_nIntegerDigital(6)
+  , m_nDecimalDigital(4)
 {
 
 }
@@ -31,6 +32,12 @@ void QHmiTableView::setModel(QHmiTableModel *model)
     rects.resize(m_pObjModel->column());
     m_vctCellRects.push_back(rects);
   }
+}
+
+void QHmiTableView::setDataPrecision(int integer, int decimal)
+{
+  m_nIntegerDigital = integer;
+  m_nDecimalDigital = decimal;
 }
 
 void QHmiTableView::resizeEvent(QResizeEvent *)
@@ -112,25 +119,47 @@ void QHmiTableView::paintEvent(QPaintEvent *)
   // horizental header
   if (m_bHHeaderVisible) {
     const int SIZE_H_HEADER = m_vctHHeaderRects.size();
+    const QStringList strHeaders = m_pObjModel->hHeader();
     for (int i = 0; i < SIZE_H_HEADER; ++i) {
       painter.drawRect(m_vctHHeaderRects[i]);
+      painter.drawText(m_vctHHeaderRects[i], Qt::AlignCenter, strHeaders[i]);
     }
   }
 
   // vertical header
   if (m_bVHeaderVisible) {
     const int SIZE_V_HEADER = m_vctVHeaderRects.size();
+    const QStringList strHeaders = m_pObjModel->vHeader();
     for (int i = 0; i < SIZE_V_HEADER; ++i) {
       painter.drawRect(m_vctVHeaderRects[i]);
+      painter.drawText(m_vctVHeaderRects[i], Qt::AlignCenter, strHeaders[i]);
     }
   }
 
   // data cell
   const int SIZE_ROW = m_vctCellRects.size();
   const int SIZE_COLUMN = m_vctCellRects[0].size();
+  const int SPACE_X = 10;
+  const int SIGN_W = 20;
   for (int i = 0; i < SIZE_ROW; ++i) {
     for (int j = 0; j < SIZE_COLUMN; ++j) {
       painter.drawRect(m_vctCellRects[i][j]);
+      QRect rectf = QRect(
+            m_vctCellRects[i][j].x() + SPACE_X,
+            m_vctCellRects[i][j].y(),
+            SIGN_W,
+            m_vctCellRects[i][j].height());
+      QString text = (m_pObjModel->data(i, j) >= 0 ? "+" : "-");
+      painter.drawText(rectf, Qt::AlignVCenter | Qt::AlignLeft, text);
+
+      text = QString("%1").arg(
+            qAbs(m_pObjModel->data(i, j)), -1, 'f', m_nDecimalDigital);
+      rectf = QRect(
+                  m_vctCellRects[i][j].x() + SPACE_X + SIGN_W,
+                  m_vctCellRects[i][j].y(),
+                  m_vctCellRects[i][j].width() - 2 * SPACE_X - SIGN_W,
+                  m_vctCellRects[i][j].height());
+      painter.drawText(rectf, Qt::AlignVCenter | Qt::AlignRight, text);
     }
   }
 }

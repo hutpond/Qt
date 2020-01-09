@@ -18,6 +18,13 @@ void QHmiTableModel::setRowColumn(const int row, int const column)
     }
     m_vctDatas.push_back(datas);
   }
+
+  for (int i = 0; i < column; ++i) {
+    m_hHeaderStrings.push_back(QString::number(i));
+  }
+  for (int i = 0; i < row; ++i) {
+    m_vHeaderStrings.push_back(QString::number(i));
+  }
 }
 
 const int QHmiTableModel::row() const
