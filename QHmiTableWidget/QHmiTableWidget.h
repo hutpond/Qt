@@ -14,8 +14,20 @@ public:
   QHmiTableWidget(int, int, QWidget *parent = nullptr);
   ~QHmiTableWidget();
 
+  void setHeaderVisible(bool, bool);
+  void setHeaderHeightPercent(float);
+  void setHeaderWidthPercent(float);
+  void setDataPrecision(int, int);
+
+  void setHHeader(const QStringList &);
+  void setVHeader(const QStringList &);
+  void setData(int, int, double, bool = false);
+
 protected:
   virtual void resizeEvent(QResizeEvent *) final;
+
+signals:
+  void selected(int, int);
 
 private:
   QHmiTableModel *m_pObjModel;

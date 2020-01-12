@@ -33,7 +33,7 @@ public:
   const QStringList & hHeader() const;
   const QStringList & vHeader() const;
 
-  void setData(int, int, double, bool = false);
+  void setData(int, int, double, bool);
   double data(int, int) const;
 
 signals:
