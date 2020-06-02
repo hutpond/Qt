@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(/usr/local/osg/include)
 link_directories(/usr/local/osg/lib)
 
-set(Qt5_DIR /opt/Qt5.12.4/5.12.4/gcc_64/lib/cmake/Qt5)
+set(Qt5_DIR /opt/Qt5.14.2/5.14.2/gcc_64/lib/cmake/Qt5)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(osgTest
