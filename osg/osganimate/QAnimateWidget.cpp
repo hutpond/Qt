@@ -1,5 +1,8 @@
 #include "QAnimateWidget.h"
 
+#include <QKeyEvent>
+#include <QThread>
+
 #include <osg/Notify>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
@@ -63,6 +66,55 @@ void QAnimateWidget::resizeGL(int width, int height)
 void QAnimateWidget::paintGL()
 {
   frame();
+}
+
+void QAnimateWidget::keyPressEvent(QKeyEvent *e)
+{
+  _gw->getEventQueue()->keyPress(
+        (osgGA::GUIEventAdapter::KeySymbol)*(e->text().toLatin1().data())
+        );
+}
+
+void QAnimateWidget::keyReleaseEvent(QKeyEvent *e)
+{
+  _gw->getEventQueue()->keyRelease(
+        (osgGA::GUIEventAdapter::KeySymbol)*(e->text().toLatin1().data())
+        );
+}
+
+void QAnimateWidget::mousePressEvent(QMouseEvent *e)
+{
+  int button = 0;
+  switch(e->button())
+  {
+    case(Qt::LeftButton): button = 1; break;
+    case(Qt::MidButton): button = 2; break;
+    case(Qt::RightButton): button = 3; break;
+    case(Qt::NoButton): button = 0; break;
+    default: button = 0; break;
+  }
+  _gw->getEventQueue()->mouseButtonPress(e->x(), e->y(), button);
+  update();
+}
+
+void QAnimateWidget::mouseReleaseEvent(QMouseEvent *e)
+{
+  int button = 0;
+  switch(e->button())
+  {
+    case(Qt::LeftButton): button = 1; break;
+    case(Qt::MidButton): button = 2; break;
+    case(Qt::RightButton): button = 3; break;
+    case(Qt::NoButton): button = 0; break;
+    default: button = 0; break;
+  }
+  _gw->getEventQueue()->mouseButtonRelease(e->x(), e->y(), button);
+  update();
+}
+
+void QAnimateWidget::mouseMoveEvent(QMouseEvent *e)
+{
+  _gw->getEventQueue()->mouseMotion(e->x(), e->y());
 }
 
 osg::ref_ptr<osg::Group> QAnimateWidget::createModel(bool overlay, osgSim::OverlayNode::OverlayTechnique technique)

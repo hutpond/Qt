@@ -11,3 +11,5 @@ Qt Project 介绍
 * FrenetBezier: Frenet坐标系和Cartesian坐标系下，Bezier曲线转换
 * mqttor: mqtt客户端工具
 * ComAssistant: 串口助手，未完成
+* cubetestopengl: opengl + opencv 纹理贴图 
+* cube_opengl: opengl立方体
