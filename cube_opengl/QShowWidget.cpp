@@ -12,84 +12,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 #include <opencv2/opencv.hpp>
+//#include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/highgui.hpp"
+
 #include <QMouseEvent>
-
-float skyboxVertices[] = {
-    // positions
-    -1.0f,  1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-
-    -1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
-
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-
-    -1.0f, -1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
-
-    -1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f, -1.0f,
-
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f
-};
-
-const char *skyboxVAO = "#version 330 core"
-                  "layout (location = 0) in vec3 position;"
-                  "out vec3 TexCoords;"
-                  "uniform mat4 projection;"
-                  "uniform mat4 view;"
-                  "void main()"
-                  "{"
-                  "    gl_Position =   projection * view * vec4(position, 1.0);"
-                  "    TexCoords = position;"
-                  "}";
-
-const char *vos2 = "#version 330 core"
-"in vec3 TexCoords;"
-"out vec4 color;"
-
-"uniform samplerCube skybox;"
-
-"void main()"
-"{"
-"    color = texture(skybox, TexCoords);"
-"}";
 
 QShowWidget::QShowWidget(QWidget *parent)
   : QOpenGLWidget(parent)
 {
+  capture_ = cv::VideoCapture(0);
+  tiemr_id = startTimer(100);
 }
 
 QShowWidget::~QShowWidget()
 {
+  killTimer(tiemr_id);
 }
 
 void QShowWidget::initializeGL()
@@ -127,12 +66,12 @@ void QShowWidget::paintGL()
 
   double vehicle_x = 5;
   double vehicle_y = 5;
-  double vehicle_z = 5;
+//  double vehicle_z = 5;
 
   double radius = 20;
   float width = 10;
   float ratio = (float)this->height() / this->width();
-  float height = width * ratio;
+//  float height = width * ratio;
 
   // project
   glMatrixMode( GL_PROJECTION );
@@ -193,14 +132,14 @@ void QShowWidget::paintGL()
   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, material_Ke);
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material_Se);
 
-  drawCubeTexture();
+  drawCubeTexture2();
 }
 
 void QShowWidget::drawCube()
 {
-  double cx = 15;
-  double cy = 15;
-  double cz = 15;
+  double cx = 18;
+  double cy = 18;
+  double cz = 18;
 
   glTranslatef(cx / 2, cy / 2, cz / 2);
 
@@ -288,9 +227,9 @@ void QShowWidget::mouseMoveEvent(QMouseEvent *e)
  */
 void QShowWidget::drawCubeTexture()
 {
-  double cx = 15;
-  double cy = 15;
-  double cz = 15;
+  double cx = 18;
+  double cy = 18;
+  double cz = 18;
 
   glTranslatef(cx / 2, cy / 2, cz / 2);
 
@@ -352,6 +291,88 @@ void QShowWidget::drawCubeTexture()
 //  glutSwapBuffers();
 
   glTranslatef(-cx / 2, -cy / 2, -cz / 2);
+}
+
+/**
+ * @brief 绘制纹理
+ */
+void QShowWidget::drawCubeTexture2()
+{
+  double cx = 18;
+  double cy = 18;
+  double cz = 18;
+
+  glTranslatef(cx / 2, cy / 2, cz / 2);
+
+  glRotatef( x_rot_, 1.0, 0.0, 0.0 );
+  glRotatef( y_rot_, 0.0, 1.0, 0.0 );
+  glRotatef( z_rot_, 0.0, 0.0, 1.0 );
+
+  cv::Mat frame;
+  capture_ >> frame;
+  cv::imwrite("/tmp/1.jpg", frame);
+
+  GLuint texture = loadTexture("/tmp/1.jpg");
+
+  // 左面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(-cx, -cy, -cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f(-cx,  cy, -cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f(-cx,  cy,  cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(-cx, -cy,  cz);
+  glEnd();
+  // 右面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(cx, -cy, -cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f(cx,  cy, -cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f(cx,  cy,  cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(cx, -cy,  cz);
+  glEnd();
+
+  // 前面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(-cx, cy, -cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f( cx, cy, -cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f( cx, cy,  cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(-cx, cy,  cz);
+  glEnd();
+  // 后面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(-cx, -cy, -cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f( cx, -cy, -cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f( cx, -cy,  cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(-cx, -cy,  cz);
+  glEnd();
+
+  // 下面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(-cx, -cy, -cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f( cx, -cy, -cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f( cx,  cy, -cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(-cx,  cy, -cz);
+  glEnd();
+  // 上面
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0f, 0.0f);  glVertex3f(-cx, -cy, cz);
+  glTexCoord2f(1.0f, 0.0f);  glVertex3f( cx, -cy, cz);
+  glTexCoord2f(1.0f, 1.0f);  glVertex3f( cx,  cy, cz);
+  glTexCoord2f(0.0f, 1.0f);  glVertex3f(-cx,  cy, cz);
+  glEnd();
+
+//  glutSwapBuffers();
+
+  glTranslatef(-cx / 2, -cy / 2, -cz / 2);
+}
+
+void QShowWidget::timerEvent(QTimerEvent *)
+{
+  this->update();
 }
 
 /**

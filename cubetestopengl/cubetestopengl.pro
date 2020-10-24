@@ -19,6 +19,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG -= qt
 
+INCLUDEPATH += /usr/include/opencv4
+
 # Input
 SOURCES += main.cpp
 

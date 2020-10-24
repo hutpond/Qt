@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <QOpenGLWidget>
 
+#include "opencv2/videoio.hpp"
+
 class QShowWidget : public QOpenGLWidget
 {
   Q_OBJECT
@@ -17,11 +19,14 @@ protected:
   virtual void resizeGL(int w, int h) final;
   virtual void paintGL() final;
 
+  virtual void timerEvent(QTimerEvent *) final;
+
   void mousePressEvent(QMouseEvent *e);
   void mouseMoveEvent(QMouseEvent *e);
 
   void drawCube();
   void drawCubeTexture();
+  void drawCubeTexture2();
 
   bool powerOfTwo(int);
   GLuint loadTexture(const std::string &);
@@ -35,5 +40,7 @@ private:
   double z_rot_{0.0};
 
   GLuint texture_[6];
+  cv::VideoCapture capture_;
+  int tiemr_id;
 };
 #endif // QSHOWWIDGET_H

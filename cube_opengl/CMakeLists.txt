@@ -26,6 +26,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+include_directories(/usr/include/opencv4)
+
 add_executable(cube_opengl
   main.cpp
   QShowWidget.cpp
@@ -36,6 +38,7 @@ target_link_libraries(cube_opengl PRIVATE
   Qt5::Widgets
   opencv_core
   opencv_imgcodecs
+  opencv_videoio
   GL
   GLU
   glut
